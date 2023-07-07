@@ -27,7 +27,7 @@ class _SliverPageState extends State<Sliver2Page> {
     super.initState();
   }
 
-  Future<void> refeshData() async {
+  void refeshData() async {
     setState(() {
       isLoading = true;
     });
@@ -72,7 +72,53 @@ class _SliverPageState extends State<Sliver2Page> {
                           subtitle: Text(album.userId.toString()),
                           leading: CircleAvatar(child: Text('${album.id}')),
                           trailing: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    nameAlbumController.text = album.title;
+                                    return AlertDialog(
+                                      title: const Text('Edit Album'),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            controller: nameAlbumController,
+                                            decoration: const InputDecoration(
+                                                labelText: 'Album Name'),
+                                          )
+                                        ],
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            final model = Album(
+                                              userId: 1,
+                                              title: nameAlbumController.text,
+                                              id: album.id,
+                                            );
+                                            final newAlbum =
+                                                await RemoteDatasource()
+                                                    .updateAlbum(model);
+                                            listAlbum.insert(0, newAlbum);
+                                            setState(() {});
+                                            nameAlbumController.clear();
+                                            Navigator.pop(context);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'Update Data ${newAlbum.title} berhasil'),
+                                                backgroundColor: Colors.blue,
+                                              ),
+                                            );
+                                          },
+                                          child: const Text('Simpan'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
                             child: const Text('Edit'),
                           ),
                         ),
@@ -147,6 +193,7 @@ class _SliverPageState extends State<Sliver2Page> {
                             await RemoteDatasource().createAlbum(model);
                         listAlbum.insert(0, newAlbum);
                         setState(() {});
+                        nameAlbumController.clear();
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

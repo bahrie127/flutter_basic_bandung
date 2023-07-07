@@ -10,6 +10,8 @@ class Album {
     required this.title,
   });
 
+ 
+
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -21,7 +23,7 @@ class Album {
   factory Album.fromMap(Map<String, dynamic> map) {
     return Album(
       userId: map['userId']?.toInt() ?? 0,
-      id: map['id']?.toInt() ?? 0,
+      id: map['id']?.toInt(),
       title: map['title'] ?? '',
     );
   }
