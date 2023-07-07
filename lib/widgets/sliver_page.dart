@@ -17,6 +17,8 @@ class _SliverPageState extends State<SliverPage> {
 
   late Future<List<Album>> futureAlbum;
 
+  TextEditingController nameAlbumController = TextEditingController();
+
   @override
   void initState() {
     futureAlbum = RemoteDatasource().getAlbums();
@@ -64,6 +66,17 @@ class _SliverPageState extends State<SliverPage> {
                     }, childCount: snapshot.data!.length),
                   );
                 }
+
+                if (snapshot.hasError) {
+                  print('error: ${snapshot.error.toString()}');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(snapshot.error.toString()),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+
                 return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                   return const CircularProgressIndicator.adaptive();
@@ -72,6 +85,39 @@ class _SliverPageState extends State<SliverPage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Add Album'),
+                  content: Column(
+                    children: [
+                      TextField(
+                        controller: nameAlbumController,
+                        decoration:
+                            const InputDecoration(labelText: 'Album Name'),
+                      )
+                    ],
+                  ),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final model =
+                            Album(userId: 1, title: nameAlbumController.text);
+                        await RemoteDatasource().createAlbum(model);
+                        futureAlbum = RemoteDatasource().getAlbums();
+                        setState(() {});
+                      },
+                      child: const Text('Simpan'),
+                    ),
+                  ],
+                );
+              });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -17,4 +17,17 @@ class RemoteDatasource {
       throw Exception('get gagal');
     }
   }
+
+  Future<Album> createAlbum(Album model) async {
+    final response = await http.post(
+        Uri.parse('https://jsonplaceholder.typicode.com/albums'),
+        body: model.toJson(),
+        headers: {'Content-Type': 'application/json'});
+
+    if (response.statusCode == 201) {
+      return Album.fromJson(response.body);
+    } else {
+      throw Exception('get gagal');
+    }
+  }
 }

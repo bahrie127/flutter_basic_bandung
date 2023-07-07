@@ -4,6 +4,7 @@ import 'package:flutter_basic/widgets/grid_widget.dart';
 import 'package:flutter_basic/widgets/layout_builder_widget.dart';
 import 'package:flutter_basic/widgets/layout_widget.dart';
 import 'package:flutter_basic/widgets/scaffold_widget.dart';
+import 'package:flutter_basic/widgets/sliver_2_page.dart';
 import 'package:flutter_basic/widgets/sliver_page.dart';
 import 'package:flutter_basic/widgets/stack_widget.dart';
 import 'package:flutter_basic/widgets/tabbar_widget.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SliverPage(),
+      home: const Sliver2Page(),
     );
   }
 }
